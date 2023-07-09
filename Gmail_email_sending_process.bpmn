@@ -4,21 +4,12 @@
     <bpmn:participant id="Participant_1xb68fr" name="Gmail user" processRef="Process_0dhqw4d" />
   </bpmn:collaboration>
   <bpmn:process id="Process_0dhqw4d" isExecutable="true">
-    <bpmn:startEvent id="Event_1ipjlix" name="Send emai ?">
+    <bpmn:startEvent id="Event_1ipjlix" name="Send email ?">
       <bpmn:outgoing>Flow_1xejp94</bpmn:outgoing>
       <bpmn:conditionalEventDefinition id="ConditionalEventDefinition_1vkwop6">
         <bpmn:condition xsi:type="bpmn:tFormalExpression" />
       </bpmn:conditionalEventDefinition>
     </bpmn:startEvent>
-    <bpmn:task id="Activity_19euiv0" name="Compose the email">
-      <bpmn:incoming>Flow_1xejp94</bpmn:incoming>
-      <bpmn:incoming>Flow_1w83c3c</bpmn:incoming>
-      <bpmn:outgoing>Flow_16eoyyq</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="Activity_0y73bxd" name="Hit &#34;Send&#34;">
-      <bpmn:incoming>Flow_16eoyyq</bpmn:incoming>
-      <bpmn:outgoing>Flow_1k7wjqb</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:exclusiveGateway id="Gateway_1icion3" name="Email sent?">
       <bpmn:incoming>Flow_1k7wjqb</bpmn:incoming>
       <bpmn:outgoing>Flow_0x03jne</bpmn:outgoing>
@@ -35,17 +26,9 @@
       <bpmn:outgoing>Flow_1wntrtx</bpmn:outgoing>
       <bpmn:outgoing>Flow_0uyz9cy</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:task id="Activity_01c92hi" name="Dont save draft">
-      <bpmn:incoming>Flow_0uyz9cy</bpmn:incoming>
-      <bpmn:outgoing>Flow_07k5202</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:endEvent id="Event_0a0tlsq" name="Email not sent">
       <bpmn:incoming>Flow_0yevo5n</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:task id="Activity_17rz7z9" name="Save as draft">
-      <bpmn:incoming>Flow_0tyff6d</bpmn:incoming>
-      <bpmn:outgoing>Flow_1240l2s</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:exclusiveGateway id="Gateway_1qyjpyt">
       <bpmn:incoming>Flow_1240l2s</bpmn:incoming>
       <bpmn:incoming>Flow_07k5202</bpmn:incoming>
@@ -74,6 +57,23 @@
     <bpmn:sequenceFlow id="Flow_07k5202" sourceRef="Activity_01c92hi" targetRef="Gateway_1qyjpyt" />
     <bpmn:sequenceFlow id="Flow_0yevo5n" sourceRef="Gateway_1qyjpyt" targetRef="Event_0a0tlsq" />
     <bpmn:sequenceFlow id="Flow_1240l2s" sourceRef="Activity_17rz7z9" targetRef="Gateway_1qyjpyt" />
+    <bpmn:userTask id="Activity_19euiv0" name="Compose the email">
+      <bpmn:incoming>Flow_1xejp94</bpmn:incoming>
+      <bpmn:incoming>Flow_1w83c3c</bpmn:incoming>
+      <bpmn:outgoing>Flow_16eoyyq</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_0y73bxd" name="Hit &#34;Send&#34;">
+      <bpmn:incoming>Flow_16eoyyq</bpmn:incoming>
+      <bpmn:outgoing>Flow_1k7wjqb</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Activity_17rz7z9" name="Save as draft">
+      <bpmn:incoming>Flow_0tyff6d</bpmn:incoming>
+      <bpmn:outgoing>Flow_1240l2s</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_01c92hi" name="Dont save draft">
+      <bpmn:incoming>Flow_0uyz9cy</bpmn:incoming>
+      <bpmn:outgoing>Flow_07k5202</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0qm4ibo">
@@ -84,16 +84,8 @@
       <bpmndi:BPMNShape id="Event_06e858g_di" bpmnElement="Event_1ipjlix">
         <dc:Bounds x="222" y="122" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="209" y="165" width="62" height="14" />
+          <dc:Bounds x="208" y="165" width="65" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_19euiv0_di" bpmnElement="Activity_19euiv0">
-        <dc:Bounds x="310" y="100" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0y73bxd_di" bpmnElement="Activity_0y73bxd">
-        <dc:Bounds x="470" y="100" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1icion3_di" bpmnElement="Gateway_1icion3" isMarkerVisible="true">
         <dc:Bounds x="635" y="115" width="50" height="50" />
@@ -113,19 +105,11 @@
           <dc:Bounds x="787" y="283" width="65" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_01c92hi_di" bpmnElement="Activity_01c92hi">
-        <dc:Bounds x="900" y="320" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0a0tlsq_di" bpmnElement="Event_0a0tlsq">
         <dc:Bounds x="1092" y="282" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1075" y="263" width="71" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_17rz7z9_di" bpmnElement="Activity_17rz7z9">
-        <dc:Bounds x="900" y="190" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1qyjpyt_di" bpmnElement="Gateway_1qyjpyt" isMarkerVisible="true">
         <dc:Bounds x="1016" y="275" width="50" height="50" />
@@ -141,6 +125,18 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1083" y="98" width="53" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0rp8rbe_di" bpmnElement="Activity_19euiv0">
+        <dc:Bounds x="310" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xijn9p_di" bpmnElement="Activity_0y73bxd">
+        <dc:Bounds x="470" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1k3iu1o_di" bpmnElement="Activity_17rz7z9">
+        <dc:Bounds x="900" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pn5ujy_di" bpmnElement="Activity_01c92hi">
+        <dc:Bounds x="900" y="320" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1xejp94_di" bpmnElement="Flow_1xejp94">
         <di:waypoint x="258" y="140" />
@@ -178,32 +174,32 @@
         <di:waypoint x="738" y="360" />
         <di:waypoint x="815" y="360" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1wntrtx_di" bpmnElement="Flow_1wntrtx">
-        <di:waypoint x="840" y="385" />
-        <di:waypoint x="840" y="442" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0tyff6d_di" bpmnElement="Flow_0tyff6d">
         <di:waypoint x="840" y="335" />
         <di:waypoint x="840" y="230" />
         <di:waypoint x="900" y="230" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wntrtx_di" bpmnElement="Flow_1wntrtx">
+        <di:waypoint x="840" y="385" />
+        <di:waypoint x="840" y="442" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0uyz9cy_di" bpmnElement="Flow_0uyz9cy">
         <di:waypoint x="865" y="360" />
         <di:waypoint x="900" y="360" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1240l2s_di" bpmnElement="Flow_1240l2s">
-        <di:waypoint x="1000" y="230" />
-        <di:waypoint x="1041" y="230" />
-        <di:waypoint x="1041" y="275" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0yevo5n_di" bpmnElement="Flow_0yevo5n">
-        <di:waypoint x="1066" y="300" />
-        <di:waypoint x="1092" y="300" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_07k5202_di" bpmnElement="Flow_07k5202">
         <di:waypoint x="1000" y="360" />
         <di:waypoint x="1041" y="360" />
         <di:waypoint x="1041" y="325" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0yevo5n_di" bpmnElement="Flow_0yevo5n">
+        <di:waypoint x="1066" y="300" />
+        <di:waypoint x="1092" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1240l2s_di" bpmnElement="Flow_1240l2s">
+        <di:waypoint x="1000" y="230" />
+        <di:waypoint x="1041" y="230" />
+        <di:waypoint x="1041" y="275" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

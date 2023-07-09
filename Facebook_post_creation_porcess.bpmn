@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1964jba" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.12.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1964jba" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.12.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
   <bpmn:collaboration id="Collaboration_0oudiph">
     <bpmn:participant id="Participant_1nbwxhl" name="Facebook user" processRef="Process_0lz4k3b" />
     <bpmn:participant id="Participant_14vac0x" name="Facebook" processRef="Process_18ff0at" />
@@ -18,14 +18,6 @@
     <bpmn:sequenceFlow id="Flow_00xqn06" sourceRef="Gateway_1pt86q0" targetRef="Event_1drwe68" />
     <bpmn:sequenceFlow id="Flow_05i7aks" sourceRef="Event_1dy69o3" targetRef="Event_03cv8ic" />
     <bpmn:sequenceFlow id="Flow_1cryvc6" sourceRef="Event_1drwe68" targetRef="Event_1bl1wlx" />
-    <bpmn:task id="Activity_07aoofj" name="Write the post">
-      <bpmn:incoming>Flow_0resvly</bpmn:incoming>
-      <bpmn:outgoing>Flow_1l8vtpc</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="Activity_1ealcah" name="Hit &#39;post&#39;">
-      <bpmn:incoming>Flow_1l8vtpc</bpmn:incoming>
-      <bpmn:outgoing>Flow_0qyb7jt</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:eventBasedGateway id="Gateway_1pt86q0">
       <bpmn:incoming>Flow_0qyb7jt</bpmn:incoming>
       <bpmn:outgoing>Flow_0tri2qr</bpmn:outgoing>
@@ -47,6 +39,14 @@
     <bpmn:endEvent id="Event_1bl1wlx" name="Post not created">
       <bpmn:incoming>Flow_1cryvc6</bpmn:incoming>
     </bpmn:endEvent>
+    <bpmn:userTask id="Activity_07aoofj" name="Write the post">
+      <bpmn:incoming>Flow_0resvly</bpmn:incoming>
+      <bpmn:outgoing>Flow_1l8vtpc</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_1ealcah" name="Hit &#39;post&#39;">
+      <bpmn:incoming>Flow_1l8vtpc</bpmn:incoming>
+      <bpmn:outgoing>Flow_0qyb7jt</bpmn:outgoing>
+    </bpmn:userTask>
   </bpmn:process>
   <bpmn:process id="Process_18ff0at" isExecutable="false">
     <bpmn:sequenceFlow id="Flow_1jg9etw" sourceRef="Event_1byekax" targetRef="Activity_0sx7yi8" />
@@ -62,48 +62,45 @@
       <bpmn:outgoing>Flow_0bmkg60</bpmn:outgoing>
       <bpmn:outgoing>Flow_1fwk487</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:callActivity id="Activity_0sx7yi8" name="Check community standards">
-      <bpmn:extensionElements>
-        <zeebe:calledElement propagateAllChildVariables="false" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1jg9etw</bpmn:incoming>
-      <bpmn:outgoing>Flow_1j4upvs</bpmn:outgoing>
-    </bpmn:callActivity>
-    <bpmn:subProcess id="Activity_09rhz46">
+    <bpmn:subProcess id="Activity_09rhz46" name="Deny a post">
       <bpmn:incoming>Flow_0bmkg60</bpmn:incoming>
       <bpmn:startEvent id="Event_15uv5vb" name="Reject post">
         <bpmn:outgoing>Flow_0a62xku</bpmn:outgoing>
       </bpmn:startEvent>
-      <bpmn:task id="Activity_0p9h87a" name="Display message &#34;You cant post it&#34;">
-        <bpmn:incoming>Flow_0a62xku</bpmn:incoming>
-        <bpmn:outgoing>Flow_1t4sogm</bpmn:outgoing>
-      </bpmn:task>
-      <bpmn:task id="Activity_17hs77e" name="Dont post on timeline">
-        <bpmn:incoming>Flow_1t4sogm</bpmn:incoming>
-        <bpmn:outgoing>Flow_1fj92v4</bpmn:outgoing>
-      </bpmn:task>
       <bpmn:sequenceFlow id="Flow_1t4sogm" sourceRef="Activity_0p9h87a" targetRef="Activity_17hs77e" />
       <bpmn:endEvent id="Event_1ge0ymo" name="Post rejected">
         <bpmn:incoming>Flow_1fj92v4</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_1fj92v4" sourceRef="Activity_17hs77e" targetRef="Event_1ge0ymo" />
       <bpmn:sequenceFlow id="Flow_0a62xku" sourceRef="Event_15uv5vb" targetRef="Activity_0p9h87a" />
+      <bpmn:serviceTask id="Activity_0p9h87a" name="Display message &#34;You cant post it&#34;">
+        <bpmn:incoming>Flow_0a62xku</bpmn:incoming>
+        <bpmn:outgoing>Flow_1t4sogm</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:serviceTask id="Activity_17hs77e" name="Dont post on timeline">
+        <bpmn:incoming>Flow_1t4sogm</bpmn:incoming>
+        <bpmn:outgoing>Flow_1fj92v4</bpmn:outgoing>
+      </bpmn:serviceTask>
     </bpmn:subProcess>
-    <bpmn:subProcess id="Activity_128ixuy">
+    <bpmn:subProcess id="Activity_128ixuy" name="Grant a post">
       <bpmn:incoming>Flow_1fwk487</bpmn:incoming>
       <bpmn:startEvent id="Event_1max1a8" name="Grant post">
         <bpmn:outgoing>Flow_0isqise</bpmn:outgoing>
       </bpmn:startEvent>
-      <bpmn:task id="Activity_1525vl1" name="Post on timeline">
-        <bpmn:incoming>Flow_0isqise</bpmn:incoming>
-        <bpmn:outgoing>Flow_1awv2hh</bpmn:outgoing>
-      </bpmn:task>
       <bpmn:sequenceFlow id="Flow_0isqise" sourceRef="Event_1max1a8" targetRef="Activity_1525vl1" />
       <bpmn:endEvent id="Event_16aije4" name="Post granted">
         <bpmn:incoming>Flow_1awv2hh</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_1awv2hh" sourceRef="Activity_1525vl1" targetRef="Event_16aije4" />
+      <bpmn:serviceTask id="Activity_1525vl1" name="Post on timeline">
+        <bpmn:incoming>Flow_0isqise</bpmn:incoming>
+        <bpmn:outgoing>Flow_1awv2hh</bpmn:outgoing>
+      </bpmn:serviceTask>
     </bpmn:subProcess>
+    <bpmn:businessRuleTask id="Activity_0sx7yi8" name="Check community standards">
+      <bpmn:incoming>Flow_1jg9etw</bpmn:incoming>
+      <bpmn:outgoing>Flow_1j4upvs</bpmn:outgoing>
+    </bpmn:businessRuleTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0oudiph">
@@ -116,14 +113,6 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="215" y="202" width="85" height="27" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_07aoofj_di" bpmnElement="Activity_07aoofj">
-        <dc:Bounds x="310" y="137" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1ealcah_di" bpmnElement="Activity_1ealcah">
-        <dc:Bounds x="440" y="137" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1gn1cxz_di" bpmnElement="Gateway_1pt86q0">
         <dc:Bounds x="575" y="152" width="50" height="50" />
@@ -151,6 +140,12 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="980" y="285" width="81" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0j4v0w3_di" bpmnElement="Activity_07aoofj">
+        <dc:Bounds x="310" y="137" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ge7itr_di" bpmnElement="Activity_1ealcah">
+        <dc:Bounds x="440" y="137" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0resvly_di" bpmnElement="Flow_0resvly">
         <di:waypoint x="275" y="177" />
@@ -197,11 +192,12 @@
           <dc:Bounds x="692" y="420" width="55" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0qphxtj_di" bpmnElement="Activity_0sx7yi8">
+      <bpmndi:BPMNShape id="Activity_0rfll9z_di" bpmnElement="Activity_0sx7yi8">
         <dc:Bounds x="560" y="450" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_09rhz46_di" bpmnElement="Activity_09rhz46" isExpanded="true">
         <dc:Bounds x="700" y="600" width="430" height="140" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_15uv5vb_di" bpmnElement="Event_15uv5vb">
         <dc:Bounds x="722" y="652" width="36" height="36" />
@@ -209,19 +205,17 @@
           <dc:Bounds x="712" y="695" width="56" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_17hs77e_di" bpmnElement="Activity_17hs77e">
-        <dc:Bounds x="930" y="630" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1ge0ymo_di" bpmnElement="Event_1ge0ymo">
         <dc:Bounds x="1062" y="652" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1048" y="695" width="65" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0p9h87a_di" bpmnElement="Activity_0p9h87a">
+      <bpmndi:BPMNShape id="Activity_0lr001h_di" bpmnElement="Activity_0p9h87a">
         <dc:Bounds x="780" y="630" width="100" height="80" />
-        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0z2c652_di" bpmnElement="Activity_17hs77e">
+        <dc:Bounds x="930" y="630" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1t4sogm_di" bpmnElement="Flow_1t4sogm">
         <di:waypoint x="880" y="670" />
@@ -237,6 +231,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Activity_128ixuy_di" bpmnElement="Activity_128ixuy" isExpanded="true">
         <dc:Bounds x="820" y="430" width="320" height="120" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1max1a8_di" bpmnElement="Event_1max1a8">
         <dc:Bounds x="842" y="472" width="36" height="36" />
@@ -244,15 +239,14 @@
           <dc:Bounds x="834" y="515" width="53" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1525vl1_di" bpmnElement="Activity_1525vl1">
-        <dc:Bounds x="930" y="450" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_16aije4_di" bpmnElement="Event_16aije4">
         <dc:Bounds x="1082" y="472" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1069" y="515" width="63" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_03fxvgq_di" bpmnElement="Activity_1525vl1">
+        <dc:Bounds x="930" y="450" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0isqise_di" bpmnElement="Flow_0isqise">
         <di:waypoint x="878" y="490" />
@@ -283,7 +277,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0cjih6k_di" bpmnElement="Flow_0cjih6k">
         <di:waypoint x="490" y="217" />
-        <di:waypoint x="490" y="470" />
+        <di:waypoint x="490" y="472" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0j4pwmf_di" bpmnElement="Flow_0j4pwmf">
         <di:waypoint x="800" y="600" />

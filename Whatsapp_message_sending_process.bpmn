@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0ii0swr" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.12.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0ii0swr" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.12.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
   <bpmn:collaboration id="Collaboration_1cg6d24">
     <bpmn:participant id="Participant_0qf3i4g" name="Whatsapp user" processRef="Process_1445n01" />
     <bpmn:participant id="Participant_00953dz" name="Whatsapp oragnization" processRef="Process_1u2j02y" />
@@ -8,15 +8,6 @@
     <bpmn:messageFlow id="Flow_1fjvh1l" sourceRef="Activity_13tb9i6" targetRef="Event_0dbohzf" />
   </bpmn:collaboration>
   <bpmn:process id="Process_1445n01" isExecutable="true">
-    <bpmn:task id="Activity_0m410sj" name="Compose the require message">
-      <bpmn:incoming>Flow_137v2oo</bpmn:incoming>
-      <bpmn:incoming>Flow_0qirowk</bpmn:incoming>
-      <bpmn:outgoing>Flow_0udq7th</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="Activity_0qwl4tw" name="Hit &#39;Send&#39; to deliever the message">
-      <bpmn:incoming>Flow_0udq7th</bpmn:incoming>
-      <bpmn:outgoing>Flow_178s8gz</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:eventBasedGateway id="Gateway_0elvsbs">
       <bpmn:incoming>Flow_178s8gz</bpmn:incoming>
       <bpmn:outgoing>Flow_1pvedi7</bpmn:outgoing>
@@ -58,32 +49,26 @@
     <bpmn:endEvent id="Event_0lpcvfj" name="Message sent">
       <bpmn:incoming>Flow_0i5qj9s</bpmn:incoming>
     </bpmn:endEvent>
+    <bpmn:userTask id="Activity_0m410sj" name="Compose the require message">
+      <bpmn:incoming>Flow_137v2oo</bpmn:incoming>
+      <bpmn:incoming>Flow_0qirowk</bpmn:incoming>
+      <bpmn:outgoing>Flow_0udq7th</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_0qwl4tw" name="Hit &#39;Send&#39; to deliever the message">
+      <bpmn:incoming>Flow_0udq7th</bpmn:incoming>
+      <bpmn:outgoing>Flow_178s8gz</bpmn:outgoing>
+    </bpmn:userTask>
   </bpmn:process>
   <bpmn:process id="Process_1u2j02y" isExecutable="false">
     <bpmn:startEvent id="Event_1kek5s5" name="Message received">
       <bpmn:outgoing>Flow_1b0h9le</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_0fi1io4" />
     </bpmn:startEvent>
-    <bpmn:callActivity id="Activity_0am3ic1" name="Deliever message">
-      <bpmn:extensionElements>
-        <zeebe:calledElement propagateAllChildVariables="false" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1b0h9le</bpmn:incoming>
-      <bpmn:outgoing>Flow_12zm503</bpmn:outgoing>
-    </bpmn:callActivity>
     <bpmn:exclusiveGateway id="Gateway_0xsi6am" name="Message delivered ?">
       <bpmn:incoming>Flow_12zm503</bpmn:incoming>
       <bpmn:outgoing>Flow_1a9cj3m</bpmn:outgoing>
       <bpmn:outgoing>Flow_1e6llmq</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:task id="Activity_0fxmu0c" name="Inform about success">
-      <bpmn:incoming>Flow_1a9cj3m</bpmn:incoming>
-      <bpmn:outgoing>Flow_12gn1p7</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="Activity_13tb9i6" name="Inform about failure">
-      <bpmn:incoming>Flow_1e6llmq</bpmn:incoming>
-      <bpmn:outgoing>Flow_17dbs6b</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:sequenceFlow id="Flow_1b0h9le" sourceRef="Event_1kek5s5" targetRef="Activity_0am3ic1" />
     <bpmn:sequenceFlow id="Flow_12zm503" sourceRef="Activity_0am3ic1" targetRef="Gateway_0xsi6am" />
     <bpmn:sequenceFlow id="Flow_1a9cj3m" name="Yes" sourceRef="Gateway_0xsi6am" targetRef="Activity_0fxmu0c" />
@@ -96,19 +81,23 @@
     <bpmn:endEvent id="Event_11daqfc" name="Message not delivered">
       <bpmn:incoming>Flow_17dbs6b</bpmn:incoming>
     </bpmn:endEvent>
+    <bpmn:serviceTask id="Activity_0am3ic1" name="Deliever message">
+      <bpmn:incoming>Flow_1b0h9le</bpmn:incoming>
+      <bpmn:outgoing>Flow_12zm503</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sendTask id="Activity_0fxmu0c" name="Inform about success">
+      <bpmn:incoming>Flow_1a9cj3m</bpmn:incoming>
+      <bpmn:outgoing>Flow_12gn1p7</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:sendTask id="Activity_13tb9i6" name="Inform about failure">
+      <bpmn:incoming>Flow_1e6llmq</bpmn:incoming>
+      <bpmn:outgoing>Flow_17dbs6b</bpmn:outgoing>
+    </bpmn:sendTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1cg6d24">
       <bpmndi:BPMNShape id="Participant_0qf3i4g_di" bpmnElement="Participant_0qf3i4g" isHorizontal="true">
         <dc:Bounds x="160" y="80" width="1260" height="270" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0m410sj_di" bpmnElement="Activity_0m410sj">
-        <dc:Bounds x="410" y="140" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0qwl4tw_di" bpmnElement="Activity_0qwl4tw">
-        <dc:Bounds x="570" y="140" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0bzdb2k_di" bpmnElement="Gateway_0elvsbs">
@@ -149,6 +138,12 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1225" y="205" width="70" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_00mqhqw_di" bpmnElement="Activity_0m410sj">
+        <dc:Bounds x="410" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1xbwxw8_di" bpmnElement="Activity_0qwl4tw">
+        <dc:Bounds x="570" y="140" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_137v2oo_di" bpmnElement="Flow_137v2oo">
         <di:waypoint x="358" y="180" />
@@ -205,22 +200,11 @@
           <dc:Bounds x="575" y="495" width="90" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1v1n41h_di" bpmnElement="Activity_0am3ic1">
-        <dc:Bounds x="690" y="430" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0xsi6am_di" bpmnElement="Gateway_0xsi6am" isMarkerVisible="true">
         <dc:Bounds x="835" y="445" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="833" y="416" width="54" height="27" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0fxmu0c_di" bpmnElement="Activity_0fxmu0c">
-        <dc:Bounds x="1090" y="430" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_13tb9i6_di" bpmnElement="Activity_13tb9i6">
-        <dc:Bounds x="1100" y="530" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1j335s5_di" bpmnElement="Event_1j335s5">
         <dc:Bounds x="1252" y="452" width="36" height="36" />
@@ -233,6 +217,15 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1238" y="595" width="64" height="27" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0o9m73u_di" bpmnElement="Activity_0am3ic1">
+        <dc:Bounds x="690" y="430" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0hewr6m_di" bpmnElement="Activity_0fxmu0c">
+        <dc:Bounds x="1090" y="430" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1yp569d_di" bpmnElement="Activity_13tb9i6">
+        <dc:Bounds x="1100" y="530" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1b0h9le_di" bpmnElement="Flow_1b0h9le">
         <di:waypoint x="638" y="470" />
